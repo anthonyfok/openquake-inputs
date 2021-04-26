@@ -11,8 +11,7 @@
 			</costTypes>
 		</conversions>
 		<occupancyPeriods>day night transit</occupancyPeriods>
-		<tagNames> SauidID LandUse GenOcc OccClass GenType BldgType BldEpoch SSC_Zone EqDesLev sauid dauid adauid fsauid csduid csdname cduid cdname SAC eruid ername pruid prname SS_Region country
-
+		<tagNames> SauidID LandUse GenOcc OccClass GenType BldgType BldEpoch SSC_Zone EqDesLev sauid dauid adauid fsauid csduid csdname cduid cdname SAC eruid ername pruid prname SS_Region nation
  </tagNames>
 	 <assets>  
         oqBldgExp_CA.csv
