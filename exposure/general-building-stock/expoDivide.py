@@ -30,7 +30,7 @@ os.makedirs(fileLoc, exist_ok=True)
 def saveOutput(name, out, PT, fileLoc):
     """Save exposure files with consistent location and naming"""
     if name == PT:
-        out.to_csv(str(fileLoc)+'oqBldgExp_'+str(PT)+'_allprov.csv', index=False)
+        out.to_csv(str(fileLoc)+'oqBldgExp_'+str(PT)+'.csv', index=False)
     else:
         out.to_csv(str(fileLoc)+'oqBldgExp_'+str(PT)+'_'+str(name)+'.csv', index=False)
     del(out)
