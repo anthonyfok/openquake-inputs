@@ -29,7 +29,10 @@ fileLoc = './subDividedExpoFiles/'
 os.makedirs(fileLoc, exist_ok=True)
 def saveOutput(name, out, PT, fileLoc):
     """Save exposure files with consistent location and naming"""
-    out.to_csv(str(fileLoc)+'oqBldgExp_'+str(PT)+'_'+str(name)+'.csv', index=False)
+    if name == PT:
+        out.to_csv(str(fileLoc)+'oqBldgExp_'+str(PT)+'_allprov.csv', index=False)
+    else:
+        out.to_csv(str(fileLoc)+'oqBldgExp_'+str(PT)+'_'+str(name)+'.csv', index=False)
     del(out)
 
     
@@ -231,6 +234,8 @@ for i, row in provs.iterrows():
     print('Working on '+str(PT))
     print('---------------------------------------------------')
     df = masterdf[masterdf['pruid'] == PTID]
+    #export provincial scale dataset
+    saveOutput(PT,df,PT,fileLoc)
     # for each 1st character of FSA
     for char in df['fsauid'].str[0].unique():
         numAssets = df['fsauid'][df['fsauid'].str.contains(re.escape(char) + r"[0-9][A-Z]")].count()
@@ -486,7 +491,8 @@ check2 = check.sort_values('id').round(4).reset_index(drop=True)
 ### Test length
 print('The length of the master is '+str(len(masterdf))+' and the length of combined expo files (check) is '+str(len(check))+'.')
 
-### Test using 'eq' 
+### Test using 'eq'
+""" 
 eqtest1 = check2.eq(master2)
 if ((check2.columns).equals((master2.columns))) & ((check2.index).equals((master2.index))) & (eqtest1.all(axis=0).all()) & (eqtest1.all(axis=1).all()):
     print('Columns & indices match between master file and concatenated new exposure files')
@@ -504,7 +510,7 @@ if eqtest.empty:
 
 ### NOTE: Test using 'equals' fails because there are different data types (dtypes)
 #print('Do the new exposure files match the master file? '+str(check2.equals(master2)))
-
+"""
 
 
 ##############################################################################################
