@@ -293,36 +293,51 @@ for i, row in provs.iterrows():
                     regFSAs = selectFSAs #list all the FSA's that need to be split (for this region)
                     del(selectFSAs)
                     if reg == 'Greater Vancouver':
-                        #pick FSAs from my desired planning region
-                        csdInVancouverNorth = ['West Vancouver', 'North Vancouver', 'Burrard Inlet 3', 'Burnaby', 'Vancouver', 'Greater Vancouver A', 'Musqueam 2', 'Capilano 5', 'Seymour Creek 2', 'Mission 1']
-                        selectFSAs = regdf['fsauid'][regdf['csdname'].isin(csdInVancouverNorth)].unique()
-                        selectFSAs = np.setdiff1d(selectFSAs,np.array(['V4N']))
-                        #selectFSAs = checkPoly(selectFSAs, allFSAs, firstchar) #suspending here because these were chosen specifically
+                        #note Vancouver has been selectively divided into regions of at most 35000 for computational reasons.
+                        #pick FSAs with Vancouver and UBC area
+                        selectFSAs = ['V5Z', 'V6A', 'V6S', 'V6T', 'V6Z', 'V5K', 'V5L', 'V5M', 'V6B', 'V6C', 'V6E', 'V5R', 'V5N', 'V5P', 'V6G', 'V5S', 'V5T', 'V6H', 'V6J', 'V6K', 'V5V', 'V5W', 'V5X', 'V5Y', 'V6L', 'V6M', 'V6N', 'V6P', 'V6R']
                         selectFSAs = [i for i in selectFSAs if i in allFSAs] #only allow FSA's to be used if they're still on the allFSAs list
                         numAssetsSubSub = regdf['id'][regdf['fsauid'].isin(selectFSAs)].count()
                         if numAssetsSubSub <= THRESH:
-                            print('Removing '+str(numAssetsSubSub)+' assets ('+str(reg)+' North)')
+                            print('Removing '+str(numAssetsSubSub)+' assets ('+str(reg)+' Vancouver)')
                             #pull entries with FSA matching anything in selectFSAs, save
                             out =  regdf[regdf['fsauid'].isin(selectFSAs)]
-                            name = str(char)+'_'+str(reg).replace(" ", "")+'North'
+                            name = str(char)+'_'+str(reg).replace(" ", "")+'Vancouver'
                             saveOutput(name, out, PT, fileLoc)
                             del(out)
                             allFSAs = [i for i in allFSAs if i not in selectFSAs] #take those FSA's out of the list
                             regFSAs = [i for i in regFSAs if i not in selectFSAs] #take those FSA's out of the region list
                             del(selectFSAs)
-                            #put the rest of the FSAs from this region (that are still on allFSAs) into file
-                            selectFSAs = [i for i in regFSAs if i in allFSAs]
-                            selectFSAs = checkPoly(selectFSAs, allFSAs, firstchar)
-                            numAssetsSubSubRemain = regdf['id'][regdf['fsauid'].isin(selectFSAs)].count()
-                            if numAssetsSubSubRemain <= THRESH:
-                                print('Removing '+str(numAssetsSubSubRemain)+' assets ('+str(reg)+' South)')
+                            #select FSAs in southern GVRD, mostly south of the Fraser.
+                            selectFSAs = ['V2Y', 'V7B', 'V7C', 'V3R', 'V4A', 'V4B', 'V6V', 'V4C', 'V4E', 'V7E', 'V3S', 'V3T', 'V3V', 'V6W', 'V6X', 'V6Y', 'V4G', 'V4L', 'V4M', 'V3W', 'V3X', 'V3Z', 'V4K', 'V7A', 'V4N', 'V4P', 'V1M', 'V2Z', 'V3A', 'V4W']
+                            selectFSAs = [i for i in selectFSAs if i in allFSAs] #only allow FSA's to be used if they're still on the allFSAs list
+                            numAssetsSubSub = regdf['id'][regdf['fsauid'].isin(selectFSAs)].count()
+                            if numAssetsSubSub <= THRESH:
+                                print('Removing '+str(numAssetsSubSub)+' assets ('+str(reg)+' South)')
                                 #pull entries with FSA matching anything in selectFSAs, save
                                 out =  regdf[regdf['fsauid'].isin(selectFSAs)]
                                 name = str(char)+'_'+str(reg).replace(" ", "")+'South'
                                 saveOutput(name, out, PT, fileLoc)
                                 del(out)
                                 allFSAs = [i for i in allFSAs if i not in selectFSAs] #take those FSA's out of the list
+                                regFSAs = [i for i in regFSAs if i not in selectFSAs] #take those FSA's out of the region list
                                 del(selectFSAs)
+                                #put the rest of the FSAs from this region (that are still on allFSAs) into file
+                                selectFSAs = [i for i in regFSAs if i in allFSAs]
+                                selectFSAs = checkPoly(selectFSAs, allFSAs, firstchar)
+                                numAssetsSubSubRemain = regdf['id'][regdf['fsauid'].isin(selectFSAs)].count()
+                                if numAssetsSubSubRemain <= THRESH:
+                                    print('Removing '+str(numAssetsSubSubRemain)+' assets ('+str(reg)+' North)')
+                                    #pull entries with FSA matching anything in selectFSAs, save
+                                    out =  regdf[regdf['fsauid'].isin(selectFSAs)]
+                                    name = str(char)+'_'+str(reg).replace(" ", "")+'North'
+                                    saveOutput(name, out, PT, fileLoc)
+                                    del(out)
+                                    allFSAs = [i for i in allFSAs if i not in selectFSAs] #take those FSA's out of the list
+                                    del(selectFSAs)
+                                else:
+                                    print('Can\'t remove Vancouver East - too big')
+                                    sys.exit()
                             else:
                                 print('Can\'t remove Vancouver South - too big')
                                 sys.exit()
