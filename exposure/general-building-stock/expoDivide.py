@@ -294,7 +294,8 @@ for i, row in provs.iterrows():
                     del(selectFSAs)
                     if reg == 'Greater Vancouver':
                         #pick FSAs from my desired planning region
-                        selectFSAs = regdf['fsauid'][regdf['csdname'].isin(['West Vancouver', 'North Vancouver', 'Burrard Inlet 3', 'Burnaby', 'Vancouver', 'Greater Vancouver A', 'Musqueam 2', 'Capilano 5', 'Seymour Creek 2', 'Mission 1'])].unique()
+                        csdInVancouverNorth = ['West Vancouver', 'North Vancouver', 'Burrard Inlet 3', 'Burnaby', 'Vancouver', 'Greater Vancouver A', 'Musqueam 2', 'Capilano 5', 'Seymour Creek 2', 'Mission 1']
+                        selectFSAs = regdf['fsauid'][regdf['csdname'].isin(csdInVancouverNorth)].unique()
                         selectFSAs = np.setdiff1d(selectFSAs,np.array(['V4N']))
                         #selectFSAs = checkPoly(selectFSAs, allFSAs, firstchar) #suspending here because these were chosen specifically
                         selectFSAs = [i for i in selectFSAs if i in allFSAs] #only allow FSA's to be used if they're still on the allFSAs list
